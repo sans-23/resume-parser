@@ -6,6 +6,7 @@ from utils import load_default_keywords, load_default_sections
 import tempfile
 from seo_handler import handle_seo_routes
 from io import BytesIO
+
 # SEO Configuration
 st.set_page_config(
     page_title="ATS Resume Analyzer & Optimizer | Free Resume Scanner",
@@ -53,50 +54,9 @@ def inject_seo_metadata():
         <div style="display: none">Schema.org metadata for search engines</div>
     """, unsafe_allow_html=True)
 
-def main():
-    # Handle SEO routes first
-    if handle_seo_routes():
-        return
 
-    # Inject SEO metadata
-    inject_seo_metadata()
-
-    st.title("📄 ATS Resume Analyzer")
-
-    # SEO-optimized content structure
-    st.markdown("""
-    ### Optimize Your Resume for ATS Systems
-    Upload your resume to get instant feedback on:
-    - ATS Compatibility Score
-    - Keyword Analysis
-    - Section Organization
-    - Formatting Recommendations
-    """)
-
-    # Add informative section about ATS
-    with st.expander("What is ATS? 🤔"):
-        st.markdown("""
-        An Applicant Tracking System (ATS) is software used by employers to:
-        - Screen job applications
-        - Parse resumes
-        - Track candidates
-
-        Our tool helps ensure your resume is optimized for these systems.
-        """)
-
-    # Initialize session state
-    if 'analysis_complete' not in st.session_state:
-        st.session_state.analysis_complete = False
-
-    # File upload
-    uploaded_file = st.file_uploader(
-        "Upload your resume (PDF format)", 
-        type=['pdf'],
-        help="For best results, upload a text-based PDF file"
-    )
-
-    if uploaded_file:
-        with st.spinner("Analyzing your resume..."):
+def analyze_resume(job_description, uploaded_file):
+    with st.spinner("Analyzing your resume..."):
             try:
                 # Save uploaded file temporarily
                 # with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as tmp_file:
@@ -176,6 +136,63 @@ def main():
 
             except Exception as e:
                 st.error(f"An error occurred while analyzing the resume: {str(e)}")
+
+
+def main():
+    # Handle SEO routes first
+    if handle_seo_routes():
+        return
+
+    # Inject SEO metadata
+    inject_seo_metadata()
+
+    st.title("📄 ATS Resume Analyzer")
+
+    # SEO-optimized content structure
+    st.markdown("""
+    ### Optimize Your Resume for ATS Systems
+    Upload your resume to get instant feedback on:
+    - ATS Compatibility Score
+    - Keyword Analysis
+    - Section Organization
+    - Formatting Recommendations
+    """)
+
+    # Add informative section about ATS
+    with st.expander("What is ATS? 🤔"):
+        st.markdown("""
+        An Applicant Tracking System (ATS) is software used by employers to:
+        - Screen job applications
+        - Parse resumes
+        - Track candidates
+
+        Our tool helps ensure your resume is optimized for these systems.
+        """)
+
+    # Initialize session state
+    if 'analysis_complete' not in st.session_state:
+        st.session_state.analysis_complete = False
+
+    # upload_job_description_and_resume()
+
+    # File upload
+    job_description = st.text_area('Job Description')
+    uploaded_file = st.file_uploader(
+        "Upload your resume (PDF format)", 
+        type=['pdf'],
+        help="For best results, upload a text-based PDF file"
+    )
+
+    if st.button('Submit'):
+        if job_description and uploaded_file:
+            st.success('Job description and resume uploaded successfully!')
+            st.write('Job Description:', job_description)
+            analyze_resume(job_description, uploaded_file)
+            st.write('Uploaded File:', uploaded_file.name)
+        else:
+            st.error('Please fill in both fields.')
+
+    
 
     # Add SEO-friendly footer content
     st.markdown("""
