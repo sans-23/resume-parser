@@ -7,3 +7,4 @@ pdfminer>=20191125
 huggingface-hub>=0.29.1
 langchain-core>=0.3.40
 together>=1.4.1
+dotenv>=0.19.1

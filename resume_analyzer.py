@@ -1,5 +1,8 @@
 import re
 from typing import Dict, List, Optional
+import requests # type: ignore
+
+from ai import ai_recommendations # type: ignore
 
 class ResumeAnalyzer:
     def __init__(self, text, sections, keywords):
@@ -216,26 +219,17 @@ Resume Analysis:
 
 Please provide specific recommendations for improving this resume's ATS compatibility."""
 
-            # Make API request to the free model endpoint
-            headers = {
-                "Content-Type": "application/json",
-            }
+            response = ai_recommendations(prompt)
 
-            data = {
-                "prompt": prompt,
-                "max_tokens": 500,
-                "temperature": 0.7
-            }
-
-            response = requests.post(self.api_url, headers=headers, json=data)
-
-            if response.status_code == 200:
-                result = response.json()
-                return result.get('text', self._get_fallback_recommendations(analysis_results))
+            if response["status_code"] == 200:
+                print("API response received")
+                return response["content"]
             else:
+                print("No response from the API")
                 return self._get_fallback_recommendations(analysis_results)
 
         except Exception as e:
+            print(f"Error generating AI recommendations: {str(e)}")
             return self._get_fallback_recommendations(analysis_results)
 
     def _get_fallback_recommendations(self, analysis_results):

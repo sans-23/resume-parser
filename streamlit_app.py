@@ -58,22 +58,11 @@ def inject_seo_metadata():
 def analyze_resume(job_description, uploaded_file):
     with st.spinner("Analyzing your resume..."):
             try:
-                # Save uploaded file temporarily
-                # with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as tmp_file:
-                #     tmp_file.write(uploaded_file.getvalue())
-                #     temp_path = tmp_file.name
-
                 # Extract text
                 pdf_bytes = uploaded_file.getvalue()
                 pdf_file = BytesIO(pdf_bytes)
                 extractor = PDFTextExtractor()
                 extracted_text = extractor.extract_text(pdf_file)
-               
-
-                print(extracted_text)
-
-                # Clean up temporary file
-                # os.unlink(temp_path)
 
                 if len(extracted_text) < 50:
                     st.error("The uploaded PDF appears to be image-based or contains very little text. Please upload a text-based PDF.")
@@ -105,15 +94,27 @@ def analyze_resume(job_description, uploaded_file):
                 with col2:
                     st.header("📋 Detailed Analysis")
                     st.markdown("### ✓ Detected Sections")
-                    st.write(results['sections_found'])
+                    for section in results['sections_found']:
+                        st.write(f"- {section}")
 
-                    st.markdown("### 🔑 Matched Keywords")
-                    st.write(results['keywords_found'])
+                    st.markdown("### ✓ Matched Keywords")
+                    for keyword in results['keywords_found']:
+                        st.write(f"- {keyword}")
 
-                    st.markdown("### 📞 Contact Information")
-                    st.write(results['contact_info'])
+                    st.markdown("### Contact Information")
+                    contact_info = results['contact_info']
+                    if contact_info.get('name'):
+                        st.write(f"- Name: {contact_info['name']}")
+                    if contact_info.get('email'):
+                        st.write(f"- Email: {contact_info['email']}")
+                    if contact_info.get('phone'):
+                        st.write(f"- Phone: {contact_info['phone']}")
+                    if contact_info.get('linkedin'):
+                        st.write(f"- LinkedIn: {contact_info['linkedin']}")
+                    if contact_info.get('github'):
+                        st.write(f"- GitHub: {contact_info['github']}")
 
-                    st.markdown("### 📐 Format Analysis")
+                    st.markdown("### Format Analysis")
                     formatting = results['formatting_details']
                     st.write(f"- 📄 Pages: {formatting['estimated_pages']:.1f}")
                     st.write(f"- • Bullet Points Ratio: {formatting['bullet_point_ratio']:.2f}")
@@ -122,6 +123,7 @@ def analyze_resume(job_description, uploaded_file):
                 st.header("🤖 AI-Powered Recommendations")
                 with st.spinner("Generating smart recommendations..."):
                     recommendations = analyzer.get_ai_recommendations()
+                    print(recommendations)
                     st.markdown(recommendations)
 
                 # Add social sharing buttons
