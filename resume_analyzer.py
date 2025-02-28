@@ -7,7 +7,7 @@ class ResumeAnalyzer:
         self.text = text
         self.standard_sections = sections
         self.keywords = self._initialize_keywords(keywords)
-        self.api_url = "https://api.textcortex.com/v1/texts/completions"
+        self.api_url = "https://api.textcort¬ex.com/v1/texts/completions"
 
     def _initialize_keywords(self, keywords: List[str]) -> Dict[str, float]:
         """Convert keywords list to dictionary with weights"""
