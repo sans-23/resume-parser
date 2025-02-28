@@ -1,6 +1,5 @@
 import re
 from typing import Dict, List, Optional
-import json
 
 class ResumeAnalyzer:
     def __init__(self, text, sections, keywords):
