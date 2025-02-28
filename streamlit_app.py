@@ -1,5 +1,7 @@
 import streamlit as st # type: ignore
 import os
+from ai import get_ai_response
+from parse_job_description import parse_job_description
 from resume_analyzer import ResumeAnalyzer
 from text_extractor import PDFTextExtractor
 from utils import load_default_keywords, load_default_sections
@@ -59,6 +61,9 @@ def analyze_resume(job_description, uploaded_file):
     with st.spinner("Analyzing your resume..."):
             try:
                 # Extract text
+                job_description=parse_job_description(job_description)
+                with st.expander('View Job Description', expanded=True):
+                    st.markdown(f"{job_description['content']}")
                 pdf_bytes = uploaded_file.getvalue()
                 pdf_file = BytesIO(pdf_bytes)
                 extractor = PDFTextExtractor()
@@ -188,9 +193,8 @@ def main():
     if st.button('Submit'):
         if job_description and uploaded_file:
             st.success('Job description and resume uploaded successfully!')
-            st.write('Job Description:', job_description)
-            analyze_resume(job_description, uploaded_file)
             st.write('Uploaded File:', uploaded_file.name)
+            analyze_resume(job_description, uploaded_file)
         else:
             st.error('Please fill in both fields.')
 

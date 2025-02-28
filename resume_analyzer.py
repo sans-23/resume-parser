@@ -2,7 +2,7 @@ import re
 from typing import Dict, List, Optional
 import requests # type: ignore
 
-from ai import ai_recommendations # type: ignore
+from ai import get_ai_response # type: ignore
 
 class ResumeAnalyzer:
     def __init__(self, text, sections, keywords):
@@ -219,7 +219,7 @@ Resume Analysis:
 
 Please provide specific recommendations for improving this resume's ATS compatibility."""
 
-            response = ai_recommendations(prompt)
+            response = get_ai_response(prompt)
 
             if response["status_code"] == 200:
                 print("API response received")

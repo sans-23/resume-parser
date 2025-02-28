@@ -5,7 +5,7 @@ import dotenv # type: ignore
 
 dotenv.load_dotenv()
 
-def ai_recommendations(prompt):
+def get_ai_response(prompt):
     key = os.getenv("OPENAI_API_KEY")
     response = requests.post(
     url="https://openrouter.ai/api/v1/chat/completions",
@@ -23,6 +23,7 @@ def ai_recommendations(prompt):
     })
     )
     content = response.json()['choices'][0]['message']['content']
+    #print(content)
     if len(content)>0 and "error" not in content:
         return {
             "status_code": 200,
